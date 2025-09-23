@@ -2,6 +2,7 @@ import { Banner } from "./components/banner";
 import Carrousel from "./components/Carrousel";
 import { NavBar } from "./components/navBar";
 
+
 export default function Home() {
   const categoriesMock = [
     { name: "Example 1", src: "/categories/categorie1.png" },
