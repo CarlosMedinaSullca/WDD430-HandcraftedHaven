@@ -5,12 +5,12 @@ import { Search } from "lucide-react";
 export function SearchBar() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleSearch = (e: any) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      console.log("Searching for:", searchQuery);
-      // We need to add teh search logic here
-    }
+  const handleSearch = () => {
+    // e.preventDefault();
+    // if (searchQuery.trim()) {
+    //   console.log("Searching for:", searchQuery);
+    //   // We need to add teh search logic here
+    // }
   };
 
   return (
