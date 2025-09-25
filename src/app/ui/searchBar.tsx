@@ -5,12 +5,12 @@ import { Search } from "lucide-react";
 export function SearchBar() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleSearch = () => {
-    // e.preventDefault();
-    // if (searchQuery.trim()) {
-    //   console.log("Searching for:", searchQuery);
-    //   // We need to add teh search logic here
-    // }
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      console.log("Searching for:", searchQuery);
+      // We need to add teh search logic here
+    }
   };
 
   return (
@@ -24,7 +24,7 @@ export function SearchBar() {
             type="search"
             value={searchQuery}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
-            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && handleSearch()}  
+            // onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && handleSearch()}  
             placeholder="Search products..."
             className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-2xl leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
