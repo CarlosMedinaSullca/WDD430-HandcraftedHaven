@@ -24,7 +24,7 @@ export function SearchBar() {
             type="search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearch(e)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             placeholder="Search products..."
             className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-2xl leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
