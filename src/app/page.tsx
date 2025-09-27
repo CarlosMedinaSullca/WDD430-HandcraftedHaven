@@ -4,7 +4,32 @@ import FeaturedArtisans from "./components/FeaturedArtisansCarr";
 import Footer from "./components/Footer";
 import { NavBar } from "./components/navBar";
 import TrendingCategories from "./components/TrendingCategories";
-import { Gem, Leaf, LampDesk, Shirt } from "lucide-react";
+import { Gem, Leaf, LampDesk, Shirt, LucideIcon } from "lucide-react";
+import { fetchCategories } from "./endpoints/categories";
+import { fetchArtisans } from "./endpoints/artisans";
+
+interface Category {
+  name: string;
+  icon: LucideIcon;
+}
+const iconMap: Record<string, LucideIcon> = {
+  Gem,
+  Leaf,
+  LampDesk,
+  Shirt,
+};
+
+const rawCategories = await fetchCategories();
+const rawArtisans = await fetchArtisans();
+
+const categories: Category[] = rawCategories
+  .slice(0, 3)
+  .map((cat: { name: string; icon: string }) => ({
+    name: cat.name,
+    icon: iconMap[cat.icon] || Gem, // fallback si no existe
+  }));
+
+console.log("categories in page", rawCategories);
 
 export default function Home() {
   const productsMock = [
@@ -13,18 +38,6 @@ export default function Home() {
     { name: "Example 3", src: "/categories/categorie3.png" },
   ];
 
-  const artisansMock = [
-    { name: "Ivan Leffalle", src: "/categories/categorie1.png" },
-    { name: "Ivan Leffalle", src: "/categories/categorie1.png" },
-    { name: "Ivan Leffalle", src: "/categories/categorie1.png" },
-  ];
-
-  const categoriesMock = [
-    { name: "Jewelry", icon: Gem },
-    { name: "Home Decor", icon: Leaf },
-    { name: "Home Decor", icon: LampDesk },
-    { name: "Apparel", icon: Shirt },
-  ];
   return (
     <div className="font-sans min-h-screen flex flex-col items-center">
       <header className="sticky top-0 z-50 w-full bg-white shadow">
@@ -34,8 +47,8 @@ export default function Home() {
       <main className="flex flex-col gap-8 max-w-7xl items-center p-8 pt-8">
         <Banner />
         <Carrousel list={productsMock} />
-        <FeaturedArtisans artisans={artisansMock} />
-        <TrendingCategories categories={categoriesMock} />
+        <FeaturedArtisans artisans={rawArtisans} />
+        <TrendingCategories categories={categories} />
       </main>
       <Footer />
     </div>
