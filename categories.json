@@ -1,0 +1,7 @@
+[
+  { "name": "Knitting", "icon": "Yarn" },
+  { "name": "Sewing", "icon": "NeedleThread" },
+  { "name": "Embroidery", "icon": "EmbroideryHoop" },
+  { "name": "Weaving", "icon": "Loom" },
+  { "name": "Macramé", "icon": "MacrameKnot" }
+]

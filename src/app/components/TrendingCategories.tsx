@@ -7,6 +7,7 @@ interface TrendingCategoriesProp {
 export default function TrendingCategories({
   categories,
 }: TrendingCategoriesProp) {
+  console.log("categories from page", categories);
   return (
     <div className="flex flex-col">
       <h1 className="text-xl font-semibold mb-4 text-gray-900">
