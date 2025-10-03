@@ -25,13 +25,6 @@ const eslintConfig = [
   
   // 3. Add Tailwind CSS Configuration
   {
-<<<<<<< HEAD
-    //  files: ["tailwind.config.js", "tailwind.config.cjs"],
-      rules: {
-    "@typescript-eslint/no-explicit-any": "error",
-    "@typescript-eslint/no-require-imports": "off",
-    "@typescript-eslint/no-var-requires": "off"
-=======
     files: ["**/*.{js,jsx,ts,tsx}"],
     plugins: {
       "tailwindcss": tailwindcssPlugin,
@@ -48,7 +41,6 @@ const eslintConfig = [
       // Recommended Tailwind rule: Prevent using hardcoded Tailwind utility classes in a string
       "tailwindcss/no-custom-classname": "off", // You might want this 'off' to allow non-Tailwind class names
     },
->>>>>>> d3974ce0de7c12e3f63229ab9c922a014c001ab3
   },
   
   // 4. Add React Configuration (often needed for JSX rules not covered by Next.js defaults)
