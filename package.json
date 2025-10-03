@@ -14,7 +14,8 @@
     "mongodb": "^6.20.0",
     "next": "15.5.3",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "tailwind-scrollbar-hide": "^4.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -25,8 +26,16 @@
     "autoprefixer": "^10.4.21",
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
+<<<<<<< HEAD
     "tailwind-scrollbar-hide": "^4.0.0",
     "tailwindcss": "^4",
+=======
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-tailwindcss": "^3.18.2",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
+>>>>>>> d3974ce0de7c12e3f63229ab9c922a014c001ab3
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@10.16.1+sha512.0e155aa2629db8672b49e8475da6226aa4bdea85fdcdfdc15350874946d4f3c91faaf64cbdc4a5d1ab8002f473d5c3fcedcd197989cf0390f9badd3c04678706"
 }
