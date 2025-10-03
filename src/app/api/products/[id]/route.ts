@@ -1,30 +1,25 @@
-// app/api/products/[id]/route.ts
 import { NextResponse } from "next/server";
-import clientPromise from "@/lib/db";
+import { initDb, getDb } from "@/lib/db";
 import { ObjectId } from "mongodb";
 
-const DB_NAME = "handcrafted-haven";
 const COLLECTION_NAME = "products";
 
-type Params = {
-  params: {
-    id: string;
-  };
-};
-
 // PUT: Update an existing product
-export async function PUT(request: Request, { params }: Params) {
+export async function PUT(request: Request, context: { params: { id: string } }) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     const productData = await request.json();
-    delete productData.id; // Remove the string 'id' before updating DB
+
+    // Prevent overwriting immutable fields
+    delete productData.id;
+    delete productData._id;
 
     if (!ObjectId.isValid(id)) {
       return NextResponse.json({ message: "Invalid product ID" }, { status: 400 });
     }
 
-    const client = await clientPromise;
-    const db = client.db(DB_NAME);
+    await initDb(); // initialize DB first
+    const db = getDb();
 
     const result = await db
       .collection(COLLECTION_NAME)
@@ -34,30 +29,24 @@ export async function PUT(request: Request, { params }: Params) {
       return NextResponse.json({ message: "Product not found" }, { status: 404 });
     }
 
-    return NextResponse.json(
-      { message: "Product updated successfully" },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: "Product updated successfully" }, { status: 200 });
   } catch (error) {
     console.error("Failed to update product:", error);
-    return NextResponse.json(
-      { message: "Error updating product" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Error updating product" }, { status: 500 });
   }
 }
 
 // DELETE: Delete a product
-export async function DELETE(request: Request, { params }: Params) {
+export async function DELETE(request: Request, context: { params: { id: string } }) {
   try {
-    const { id } = params;
+    const { id } = context.params;
 
     if (!ObjectId.isValid(id)) {
       return NextResponse.json({ message: "Invalid product ID" }, { status: 400 });
     }
 
-    const client = await clientPromise;
-    const db = client.db(DB_NAME);
+    await initDb(); // initialize DB first
+    const db = getDb();
 
     const result = await db
       .collection(COLLECTION_NAME)
@@ -67,12 +56,9 @@ export async function DELETE(request: Request, { params }: Params) {
       return NextResponse.json({ message: "Product not found" }, { status: 404 });
     }
 
-    return new NextResponse(null, { status: 204 }); // 204 No Content for successful deletion
+    return new NextResponse(null, { status: 204 }); // No content
   } catch (error) {
     console.error("Failed to delete product:", error);
-    return NextResponse.json(
-      { message: "Error deleting product" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Error deleting product" }, { status: 500 });
   }
 }

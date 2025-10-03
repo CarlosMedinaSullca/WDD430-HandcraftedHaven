@@ -1,3 +1,8 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import "tailwindcss";
 
 :root {
@@ -24,3 +29,41 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+<<<<<<< HEAD
+
+
+  @layer utilities {
+    /* Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* IE and Edge */
+    .no-scrollbar {
+      -ms-overflow-style: none;
+    }
+
+    /* Firefox */
+    .no-scrollbar {
+      scrollbar-width: none;
+    }
+  }
+=======
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+}
+>>>>>>> d3974ce0de7c12e3f63229ab9c922a014c001ab3

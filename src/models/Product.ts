@@ -5,10 +5,12 @@ import { ObjectId } from "mongodb";
  */
 export type Product = {
   _id?: ObjectId;        
-  id?: string;           
   name: string;          
   description: string;   
   price: number;         
-  imageUrl: string;      
-  sellerId: string;     
+  stock: string;         
+  big_picture: string;   
+  small_picture?: string;
+  category: string;      
+  artisan_id: ObjectId;  
 };
