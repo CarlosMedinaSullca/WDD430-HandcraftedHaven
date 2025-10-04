@@ -8,14 +8,6 @@ const nextConfig: NextConfig = {
       'pixabay.com',
     ],
   },
-  /* config options here */
-  images: {
-    domains: [
-      'cdn.pixabay.com', // ⬅️ Add this domain
-      // 'other-allowed-domain.com', // Add other external domains here if needed
-      'pixabay.com',
-    ],
-  },
 };
 
 export default nextConfig;
