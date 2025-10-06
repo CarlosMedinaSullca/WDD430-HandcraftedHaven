@@ -1,3 +1,4 @@
+
 export interface UserInterface{
     user_id?: number;
     first_name: string;
@@ -9,16 +10,19 @@ export interface RatingInterface{
     rating: number;
 
 }
-export interface ProductInterface{
-    product_id?: number;
-    name: string;
-    price: number;
-    stock: number;
-    description: string;
-    big_picture?: string;
-    small_picture?: string;
-    category?: string;
-    Artisan_Artisan_id?: number;
+export interface ProductInterface {
+  _id?: string;          
+  product_id?: number|string;      
+
+  name: string;
+  description: string;
+  price: number;
+  stock: number | string;     
+  big_picture?: string;
+  small_picture?: string;
+  category?: string;
+  artisan_id?: string;      
+  Artisan_Artisan_id?: number;
 }
 export interface ArtisanInterface{
     Artisan_id?: number;
