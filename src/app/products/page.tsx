@@ -1,14 +1,14 @@
 import { initDb, getDb } from "@/lib/db";
 import { Product } from "@/models/Product";
 import Link from "next/link";
-import { NavBar } from "../components/navBar"; // 👈 add NavBar
+import { NavBar } from "../components/navBar"; 
 import { ProductGrid } from "../components/productGrid";
 import { ProductInterface } from "../types/interfacesModels";
 
 export function serializeProduct(raw: any): ProductInterface {
   return {
     product_id: raw.product_id ?? undefined,
-    _id: raw._id?.toString() ?? "",  // <--- ObjectId a string
+    _id: raw._id?.toString() ?? "", 
     name: String(raw.name ?? "Unnamed Product"),
     price:
       typeof raw.price === "object" && raw.price.$numberDecimal
@@ -64,25 +64,12 @@ export default async function ProductsPage({
     .limit(limit)
     .toArray();
 
-  const products = rawProducts.map((p: any) => ({
-    ...p,
-    price:
-      typeof p.price === "object" && p.price.$numberDecimal
-        ? Number(p.price.$numberDecimal)
-        : Number(p.price ?? 0),
-    stock:
-      typeof p.stock === "object" && p.stock.$string
-        ? String(p.stock.$string)
-        : String(p.stock ?? "N/A"),
-    name: String(p.name ?? "Unnamed Product"),
-  }));
-
-  const totalPages = Math.ceil(totalProducts / limit);
   const products: ProductInterface[] = rawProducts.map(serializeProduct);
+  const totalPages = Math.ceil(totalProducts / limit);
 
   return (
     <>
-      <NavBar /> {/* ✅ NavBar added */}
+      <NavBar />
 
       <main className="p-6 max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-800 mb-6">Products</h1>
@@ -133,29 +120,8 @@ export default async function ProductsPage({
           </Link>
         </form>
 
-        {/* Product Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {products.map((product) => (
-            <div
-              key={product._id?.toString()}
-              className="border rounded-lg p-4 shadow hover:shadow-lg 
-                         hover:bg-[#9CA89E] transition-colors duration-300"
-            >
-              <img
-                src={product.big_picture ?? "/placeholder.png"}
-                alt={product.name}
-                className="w-full h-40 object-cover rounded mb-3"
-              />
-              <h2 className="text-xl font-semibold text-gray-900">{product.name}</h2>
-              <p className="text-gray-600">{product.description}</p>
-              <p className="text-lg font-bold text-[#16796F]">
-                ${product.price.toFixed(2)}
-              </p>
-              <p className="text-sm text-gray-500">Category: {product.category}</p>
-              <p className="text-sm text-gray-700">Stock: {product.stock}</p>
-            </div>
-          ))}
-        </div>
+        {/* ✅ Product Grid Component */}
+        <ProductGrid products={products} />
 
         {/* Pagination */}
         <div className="flex justify-center items-center mt-6 gap-4">
@@ -183,8 +149,5 @@ export default async function ProductsPage({
         </div>
       </main>
     </>
-      {/* Product Grid */}
-      <ProductGrid products={products} />
-    </div>
   );
 }
