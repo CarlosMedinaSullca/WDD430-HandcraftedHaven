@@ -4,7 +4,7 @@ import { ReviewInterface } from "../types/interfacesModels";
 
 // Definir interface para recibir el product_id
 interface ReviewsProps {
-  product_id: number|undefined;
+  product_id: number|string|undefined;
 }
 
 export default function Reviews({ product_id }: ReviewsProps) {
@@ -28,21 +28,21 @@ export default function Reviews({ product_id }: ReviewsProps) {
           review_id: 1,
           content: "I loved the variety of colors. Perfect for beginners and experts.",
           date: "2025-09-24",
-          product_product_id: product_id,
+          product_product_id: typeof product_id === "number" ? product_id : (typeof product_id === "string" ? Number(product_id) : undefined),
           user_user_id: 201,
         },
         {
           review_id: 2,
           content: "The threads are strong and of good quality. I'll buy again.",
           date: "2025-09-22",
-          product_product_id: product_id,
+          product_product_id: typeof product_id === "number" ? product_id : (typeof product_id === "string" ? Number(product_id) : undefined),
           user_user_id: 202,
         },
         {
           review_id: 3,
           content: "Beautiful craftsmanship! The bracelet is even prettier in person.",
           date: "2025-09-20",
-          product_product_id: product_id,
+          product_product_id: typeof product_id === "number" ? product_id : (typeof product_id === "string" ? Number(product_id) : undefined),
           user_user_id: 203,
         },
       ];
@@ -57,7 +57,7 @@ export default function Reviews({ product_id }: ReviewsProps) {
         review_id: Math.floor(Math.random() * 10000),
         content: reviewText,
         date: new Date().toISOString().split("T")[0],
-        product_product_id: product_id,
+        product_product_id: typeof product_id === "number" ? product_id : (typeof product_id === "string" ? Number(product_id) : undefined),
         user_user_id: 999,
       };
 

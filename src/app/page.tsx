@@ -1,4 +1,3 @@
-'use client';
 import { Banner } from "./components/banner";
 import Carrousel from "./components/Carrousel";
 import FeaturedArtisans from "./components/FeaturedArtisansCarr";
@@ -7,7 +6,6 @@ import { NavBar } from "./components/navBar";
 import TrendingCategories from "./components/TrendingCategories";
 import { Gem, Leaf, LampDesk, Shirt, LucideIcon } from "lucide-react";
 import  ProductView from "./products/[id]/page";
-import { useRouter } from 'next/navigation';
 import React, {useState, useEffect} from "react";import { fetchCategories } from "./endpoints/categories";
 import { fetchArtisans } from "./endpoints/artisans";
 
@@ -35,11 +33,6 @@ const categories: Category[] = rawCategories
 console.log("categories in page", rawCategories);
 
 export default function Home() {
-  const router = useRouter();
-   const handleTestProduct = () => {
-    // Navegar al producto con ID 101 (tu bracelet)
-    router.push('/products/101');
-  };
   const productsMock = [
     { name: "Example 1", src: "/categories/categorie1.png" },
     { name: "Example 2", src: "/categories/categorie2.png" },

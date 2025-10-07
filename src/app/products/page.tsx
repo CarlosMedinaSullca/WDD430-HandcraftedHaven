@@ -2,6 +2,29 @@ import { initDb, getDb } from "@/lib/db";
 import { Product } from "@/models/Product";
 import Link from "next/link";
 import { NavBar } from "../components/navBar"; // 👈 add NavBar
+import { ProductGrid } from "../components/productGrid";
+import { ProductInterface } from "../types/interfacesModels";
+
+export function serializeProduct(raw: any): ProductInterface {
+  return {
+    product_id: raw.product_id ?? undefined,
+    _id: raw._id?.toString() ?? "",  // <--- ObjectId a string
+    name: String(raw.name ?? "Unnamed Product"),
+    price:
+      typeof raw.price === "object" && raw.price.$numberDecimal
+        ? Number(raw.price.$numberDecimal)
+        : Number(raw.price ?? 0),
+    stock:
+      typeof raw.stock === "object" && raw.stock.$string
+        ? String(raw.stock.$string)
+        : String(raw.stock ?? "N/A"),
+    description: String(raw.description ?? ""),
+    big_picture: String(raw.big_picture ?? ""),
+    small_picture: String(raw.small_picture ?? ""),
+    category: String(raw.category ?? ""),
+    Artisan_Artisan_id: raw.Artisan_Artisan_id ?? undefined,
+  };
+}
 
 export default async function ProductsPage({
   searchParams,
@@ -12,7 +35,7 @@ export default async function ProductsPage({
 
   await initDb();
   const db = getDb();
-
+  
   // Build query
   const query: any = {};
   if (params?.category && params.category !== "All") {
@@ -55,6 +78,7 @@ export default async function ProductsPage({
   }));
 
   const totalPages = Math.ceil(totalProducts / limit);
+  const products: ProductInterface[] = rawProducts.map(serializeProduct);
 
   return (
     <>
@@ -159,5 +183,8 @@ export default async function ProductsPage({
         </div>
       </main>
     </>
+      {/* Product Grid */}
+      <ProductGrid products={products} />
+    </div>
   );
 }
