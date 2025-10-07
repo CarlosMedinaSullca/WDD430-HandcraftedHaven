@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SessionProviderWrapper } from "../providers/SessionProviderWrapper"; // 👈 client wrapper
+import { NavBar } from "./components/navBar";
+import Footer from "./components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,12 +24,16 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <SessionProviderWrapper>
+    <SessionProviderWrapper>
+      <html lang="en" suppressHydrationWarning>
+        <NavBar />
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
           {children}
-        </SessionProviderWrapper>
-      </body>
-    </html>
+        </body>
+        <Footer />
+      </html>
+    </SessionProviderWrapper>
   );
 }

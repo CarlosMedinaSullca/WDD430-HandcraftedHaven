@@ -27,7 +27,9 @@ export default function ProfilePage() {
   function ListOfProducts() {
     return (
       <div className="border rounded-lg shadow-inner p-4 overflow-y-scroll no-scrollbar bg-white h-[40rem]">
-        <h2 className="text-lg font-semibold mb-4 text-gray-800">My Products</h2>
+        <h2 className="text-lg font-semibold mb-4 text-gray-800">
+          My Products
+        </h2>
         <ul className="grid gap-6">
           <li className="border rounded-lg p-3 shadow hover:shadow-lg hover:scale-[1.02] transition">
             <p className="text-gray-900 font-medium">Sample Product</p>
@@ -69,7 +71,6 @@ export default function ProfilePage() {
 
   return (
     <>
-      <NavBar />
       <div className="relative bg-[url('https://cdn.pixabay.com/photo/2022/04/21/14/31/pottery-7147634_960_720.jpg')] h-[30rem] w-full bg-cover bg-center">
         <div className="absolute bottom-10 left-10 flex flex-col items-center bg-black/40 text-white p-4 rounded-lg shadow">
           <Image

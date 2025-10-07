@@ -5,7 +5,6 @@ import Footer from "./components/Footer";
 import { NavBar } from "./components/navBar";
 import TrendingCategories from "./components/TrendingCategories";
 import { Gem, Leaf, LampDesk, Shirt, LucideIcon } from "lucide-react";
-import ProductView from "./products/[id]/page";
 import React from "react";
 import { fetchCategories } from "./endpoints/categories";
 import { fetchArtisans } from "./endpoints/artisans";
@@ -42,9 +41,7 @@ export default function Home() {
 
   return (
     <div className="font-sans min-h-screen flex flex-col items-center">
-      <header className="sticky top-0 z-50 w-full bg-white shadow">
-        <NavBar />
-      </header>
+      <header className="sticky top-0 z-50 w-full bg-white shadow"></header>
 
       <main className="flex flex-col gap-8 max-w-7xl items-center p-8 pt-8">
         <Banner />
@@ -58,7 +55,6 @@ export default function Home() {
           Open Review Modal
         </button>*/}
       </main>
-      <Footer />
     </div>
   );
 }
