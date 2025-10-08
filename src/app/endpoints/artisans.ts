@@ -1,7 +1,10 @@
 export const fetchArtisans = async () => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_URL || "http://localhost:3000"}/api/artisans`,
+      `${
+        process.env.NEXT_PUBLIC_URL ||
+        "https://wdd-430-handcrafted-haven-kappa.vercel.app/"
+      }/api/artisans`,
       { cache: "no-store" }
     );
 
