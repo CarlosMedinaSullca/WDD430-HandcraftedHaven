@@ -2,7 +2,8 @@ export const fetchCategories = async () => {
   try {
     const res = await fetch(
       `${
-        process.env.NEXT_PUBLIC_URL || "http://localhost:3000"
+        process.env.NEXT_PUBLIC_URL ||
+        "https://wdd-430-handcrafted-haven-kappa.vercel.app"
       }/api/categories`,
       { cache: "no-store" }
     );
