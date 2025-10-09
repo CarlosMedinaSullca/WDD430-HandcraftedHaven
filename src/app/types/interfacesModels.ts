@@ -5,10 +5,10 @@ export interface UserInterface{
     last_name: string;
 }
 export interface RatingInterface{
-    product_product_id?: number;
-    user_user_id?: number;
+    _id?: string;
+    product_id?: string;
+    user_id?: string;
     rating: number;
-
 }
 export interface ProductInterface {
   _id?: string;          
@@ -47,9 +47,35 @@ export interface ProfileInterface{
     Artisan_Artisan_id?: number;
 }
 export interface ReviewInterface{
-    review_id?: number;
-    content: string;
+    _id?: string;
+    review: string;
     date: Date|string;
-    product_product_id?: number;
-    user_user_id?: number;
+    product_id?: number;
+    user_id?: number;
+}
+
+export interface CombinedReviewResponse {
+  ratings: RatingInterface[];
+  reviews: ReviewInterface[];
+}
+
+export interface CreateReviewData {
+  review: string;
+  product_id: string;
+  user_id: string;
+  rating?: number; 
+}
+export interface CombinedReviewInterface {
+  _id?: string;
+  review: string;
+  date: Date|string;
+  product_id?: string;
+  user_id?: string;
+  rating: number; // ✅ Agregar rating aquí
+}
+
+export interface CreateRatingData {
+  product_id: string;
+  user_id: string;
+  rating: number;
 }

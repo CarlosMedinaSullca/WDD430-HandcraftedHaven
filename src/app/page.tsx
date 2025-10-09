@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import { NavBar } from "./components/navBar";
 import TrendingCategories from "./components/TrendingCategories";
 import { Gem, Leaf, LampDesk, Shirt, LucideIcon } from "lucide-react";
+import  ProductView from "./products/[id]/page";
 import React from "react";
 import { fetchCategories } from "./endpoints/categories";
 import { fetchArtisans } from "./endpoints/artisans";
