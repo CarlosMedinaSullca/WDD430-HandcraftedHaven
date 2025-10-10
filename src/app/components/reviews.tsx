@@ -1,17 +1,17 @@
 'use client';
 import React, { useState, useEffect } from "react";
-import { ReviewInterface } from "../types/interfacesModels";
+import { ReviewInterface, CreateReviewData, CombinedReviewInterface, RatingInterface } from "../types/interfacesModels";
 
-// Definir interface para recibir el product_id
 interface ReviewsProps {
   product_id: number|string|undefined;
 }
 
 export default function Reviews({ product_id }: ReviewsProps) {
   const [reviewText, setReviewText] = useState<string>("");
-  const [reviews, setReviews] = useState<ReviewInterface[]>([]);
+  const [reviews, setReviews] = useState<CombinedReviewInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(true); 
   const [delay, setDelay] = useState<boolean>(false);
+  const [rating, setRating] = useState<number>(5);
 
   useEffect(() => {
     setTimeout(() => {
@@ -21,52 +21,118 @@ export default function Reviews({ product_id }: ReviewsProps) {
   }, [product_id]);
 
   const fetchReviews = async () => {
-    setLoading(true);
-    setTimeout(() => {
-      const mockReviews = [
-        {
-          review_id: 1,
-          content: "I loved the variety of colors. Perfect for beginners and experts.",
-          date: "2025-09-24",
-          product_product_id: typeof product_id === "number" ? product_id : (typeof product_id === "string" ? Number(product_id) : undefined),
-          user_user_id: 201,
-        },
-        {
-          review_id: 2,
-          content: "The threads are strong and of good quality. I'll buy again.",
-          date: "2025-09-22",
-          product_product_id: typeof product_id === "number" ? product_id : (typeof product_id === "string" ? Number(product_id) : undefined),
-          user_user_id: 202,
-        },
-        {
-          review_id: 3,
-          content: "Beautiful craftsmanship! The bracelet is even prettier in person.",
-          date: "2025-09-20",
-          product_product_id: typeof product_id === "number" ? product_id : (typeof product_id === "string" ? Number(product_id) : undefined),
-          user_user_id: 203,
-        },
-      ];
-      setReviews(mockReviews);
-      setLoading(false); 
-    }, 2000); 
-  };
+  console.log("product_id in fetchReviews:", product_id);
+  if (!product_id) return;
+  
+  setLoading(true);
+  
+  try {
+    const response = await fetch(`/api/reviews?productId=${product_id}`);
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch reviews');
+    }
+    
+    const data = await response.json();
+    
+    console.log("=== ESTRUCTURA DE DATOS RECIBIDOS ===");
+    console.log("Product ID:", product_id);
+    console.log("API Response:", data);
+    
+    if (data.reviews && data.reviews.length > 0) {
+      console.log("Reviews encontradas:", data.reviews.length);
+      
+      const productReviews: CombinedReviewInterface[] = data.reviews
+        .filter((review: ReviewInterface) => 
+          review.product_id?.toString() === product_id.toString()
+        )
+        .map((review: ReviewInterface) => {
+          const userRating = data.ratings?.find((rating: RatingInterface) => 
+            rating.product_id === review.product_id && 
+            rating.user_id === review.user_id
+          );
+          
+          return {
+            ...review,
+            rating: userRating?.rating || 5 // Valor por defecto si no encuentra rating
+          };
+        });
+      
+      console.log("Reviews combinadas:", productReviews);
+      setReviews(productReviews);
+    } else {
+      console.log("No hay reviews para este producto");
+      setReviews([]);
+    }
+    
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    setReviews([]);
+  } finally {
+    setLoading(false);
+  }
+};
 
-  const handleSubmitReview = () => {
-    if (reviewText.trim()) {
-      const newReview: ReviewInterface = {
-        review_id: Math.floor(Math.random() * 10000),
-        content: reviewText,
-        date: new Date().toISOString().split("T")[0],
-        product_product_id: typeof product_id === "number" ? product_id : (typeof product_id === "string" ? Number(product_id) : undefined),
-        user_user_id: 999,
+  const handleSubmitReview = async () => {
+    if (!reviewText.trim() || !product_id) return;
+
+    try {
+      const reviewData: CreateReviewData = {
+        review: reviewText,
+        product_id: product_id.toString(),
+        user_id: "999", 
+        rating: rating 
       };
 
-      console.log("New review submitted:", newReview);
+      console.log("sending new review:", reviewData);
+
+      const response = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reviewData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit review');
+      }
+
+      const newReview = await response.json();
+      console.log("Review creada:", newReview);
+
       setReviewText("");
+      setRating(5);
       alert("Review submitted successfully!");
+
+      fetchReviews();
+      
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      alert("Error submitting review. Please try again.");
     }
   };
-
+  const StarRating = ({ rating, setRating }: { rating: number; setRating: (rating: number) => void }) => {
+  return (
+    <div className="flex items-center space-x-1 mb-4">
+      <span className="text-sm text-gray-700 mr-2">Your Rating:</span>
+      {[1, 2, 3, 4, 5].map((star) => (
+        <button
+          key={star}
+          type="button"
+          className={`text-2xl focus:outline-none ${
+            star <= rating ? 'text-yellow-400' : 'text-gray-300'
+          } hover:text-yellow-400 transition-colors`}
+          onClick={() => setRating(star)}
+        >
+          ★
+        </button>
+      ))}
+      <span className="text-sm text-gray-600 ml-2">({rating}/5)</span>
+    </div>
+  );
+};
   return (
     <div className="mt-12 border-t pt-8">
       <h2 className="text-2xl font-bold text-teal-700 mb-6">
@@ -78,10 +144,10 @@ export default function Reviews({ product_id }: ReviewsProps) {
         <h3 className="text-lg font-bold text-teal-700 mb-4">
           Leave a Review
         </h3>
-
+        <StarRating rating={rating} setRating={setRating} />
         <textarea
           className="w-full border rounded p-3 text-black min-h-32 focus:outline-none focus:ring-2 focus:ring-teal-500"
-          placeholder="Write your review..."
+          placeholder="Share your experience with this product..."
           value={reviewText}
           onChange={(e) => setReviewText(e.target.value)}
         />
@@ -97,44 +163,50 @@ export default function Reviews({ product_id }: ReviewsProps) {
         </div>
       </div>
 
-      <div>
-        <h3 className="text-lg font-semibold text-teal-700 mb-4">
-          Other users have shared their opinions:
-        </h3>
-
-        <div className="space-y-4">
-          {loading ? (
-            // Skeleton loader
-            <div className="animate-pulse space-y-4">
-              {[...Array(3)].map((_, index) => (
-                <div key={index} className="bg-gray-200 p-4 rounded-lg shadow-sm">
-                  <div className="h-5 bg-gray-300 w-1/2 mb-2"></div>
-                  <div className="h-3 bg-gray-300 w-full mb-2"></div>
-                  <div className="h-2 bg-gray-300 w-3/4"></div>
+      <div className="space-y-4">
+        {loading ? (
+          // Skeleton loader
+          <div className="animate-pulse space-y-4">
+            {[...Array(3)].map((_, index) => (
+              <div key={index} className="bg-gray-200 p-4 rounded-lg shadow-sm">
+                <div className="h-5 bg-gray-300 w-1/2 mb-2"></div>
+                <div className="h-3 bg-gray-300 w-full mb-2"></div>
+                <div className="h-2 bg-gray-300 w-3/4"></div>
+              </div>
+            ))}
+          </div>
+        ) : reviews.length > 0 ? (
+          <div>
+            <h3 className="text-lg font-semibold text-teal-700 mb-4">
+              Other users have shared their opinions:
+            </h3>
+            {reviews.map((review) => (
+              <div
+                key={review._id}
+                className="bg-gray-50 p-4 rounded-lg shadow-sm mb-4"
+              >
+                <div className="flex text-yellow-400 mb-2">
+                  {"★".repeat(review.rating)}
                 </div>
-              ))}
-            </div>
-          ) : (
-            reviews
-              .filter((review) => review.product_product_id === product_id)
-              .map((review) => (
-                <div
-                  key={review.review_id}
-                  className="bg-gray-50 p-4 rounded-lg shadow-sm"
-                >
-                  <div className="flex text-yellow-400 mb-2">
-                    {"★".repeat(5)}
-                  </div>
-                  <p className="text-sm text-gray-700">{review.content}</p>
-                  <p className="text-xs text-gray-500 mt-2">
-                    <em>
-                      Reviewed on {new Date(review.date).toLocaleDateString()}
-                    </em>
-                  </p>
-                </div>
-              ))
-          )}
-        </div>
+                <p className="text-sm text-gray-700">{review.review}</p>
+                <p className="text-xs text-gray-500 mt-2">
+                  <em>
+                    Reviewed on {new Date(review.date).toLocaleDateString()}
+                  </em>
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-gray-500 text-lg mb-2">
+              No reviews yet
+            </p>
+            <p className="text-gray-400 text-sm">
+              Be the first to share your experience with this product!
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

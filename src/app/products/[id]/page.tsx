@@ -4,21 +4,18 @@ import Reviews from "@/app/components/reviews";
 import ProductClientView from "@/app/components/ProductClientView";
 import { getDb, initDb } from "@/lib/db";
 import { ObjectId } from "mongodb";
-import { serializeProduct } from "../page";
+import { serializeProduct } from "../../utils/serializers";
+import { ProductService } from "../../services/productsService";
+
 
 export default async function ProductPage({
   params,
 }: {
   params: { id: string };
 }) {
-  await initDb();
-  const db = getDb();
-
-  const rawProduct = await db
-    .collection("product")
-    .findOne({ _id: new ObjectId(params.id) });
-
-  if (!rawProduct) {
+const { id } = await params;
+const product: ProductInterface = await ProductService.getProductById(id) as unknown as ProductInterface;
+if (!product) {
     return (
       <div className="container mx-auto px-4 py-8">
         <p className="text-center text-gray-500">Product not found.</p>
@@ -26,21 +23,12 @@ export default async function ProductPage({
     );
   }
 
-  
+const relatedItems: ProductInterface[] = await ProductService.getRelatedProducts(
+    product.category!,
+    id,
+    4
+  );
 
-const product: ProductInterface = serializeProduct(rawProduct);
-
-
-const relatedItemsRaw = await db
-  .collection<ProductInterface>("product") 
-  .find({
-    category: product.category,
-    _id: { $ne: new ObjectId(params.id) } as any,
-  })
-  .limit(4)
-  .toArray();
-
-const relatedItems: ProductInterface[] = relatedItemsRaw.map(serializeProduct);
 
 
   return (
@@ -55,12 +43,12 @@ const relatedItems: ProductInterface[] = relatedItemsRaw.map(serializeProduct);
       <ProductClientView product={product} />
 
       {/* Reviews */}
-      <Reviews product_id={product.product_id} />
+      <Reviews product_id={product._id} />
 
       {/* Productos relacionados */}
       <RelatedItems
         relatedItems={relatedItems}
-        currentProductId={product.product_id}
+        currentProductId={product._id ? product._id.toString() : ""}
       />
     </div>
   );

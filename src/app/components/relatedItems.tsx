@@ -16,7 +16,7 @@ const SingleItem = ({ product }: SingleItemProps) => {
   const router = useRouter();
   
   const handleClick = () => {
-    router.push(`/products/${product.product_id}`);
+    router.push(`/products/${product._id}`);
   };
 
   return (
@@ -66,14 +66,11 @@ const RelatedItemsSkeleton = () => (
   </div>
 );
 
-// Componente principal
 export const RelatedItems = ({ relatedItems, currentProductId }: RelatedItemsProps) => {
-  // Si no hay datos, mostrar skeleton
   if (!relatedItems) return <RelatedItemsSkeleton />;
 
-  // Filtrar el producto actual para no mostrarlo
   const filteredItems = relatedItems.filter(item => item.product_id !== currentProductId);
-
+  console.log("Donde se pierde, filteredItems:", filteredItems,relatedItems,currentProductId);
   if (filteredItems.length === 0) {
     return (
       <div className="mt-12 flex flex-col items-center justify-center">
@@ -89,7 +86,7 @@ export const RelatedItems = ({ relatedItems, currentProductId }: RelatedItemsPro
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {filteredItems.map(item => (
-          <SingleItem key={item.product_id} product={item} />
+          <SingleItem key={item._id} product={item} />
         ))}
       </div>
     </div>
