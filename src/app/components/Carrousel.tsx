@@ -63,7 +63,7 @@ export default function Carrousel() {
     <div className="w-full sm:px-6">
       <div
         ref={carouselRef}
-        className="flex gap-2 overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory"
+        className="flex gap-2  justify-around overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {list.map((item, index) => (

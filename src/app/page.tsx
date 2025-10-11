@@ -24,7 +24,7 @@ const rawCategories = await fetchCategories();
 const rawArtisans = await fetchArtisans();
 
 const categories: Category[] = rawCategories
-  .slice(0, 3)
+  .slice(0, 10)
   .map((cat: { name: string; icon: string }) => ({
     name: cat.name,
     icon: iconMap[cat.icon] || Gem,
