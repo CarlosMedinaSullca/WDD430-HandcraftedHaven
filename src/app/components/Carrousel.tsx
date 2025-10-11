@@ -1,14 +1,45 @@
 "use client";
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
+import { fetchProducts } from "../endpoints/products";
 
 type CarrouselProps = {
   list: { name: string; src: string }[];
 };
 
-export default function Carrousel({ list }: CarrouselProps) {
+export default function Carrousel() {
+  const [list, setList] = useState<{ name: string; small_picture: string }[]>(
+    []
+  );
   const [activeIndex, setActiveIndex] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    async function getProducts() {
+      const products = await fetchProducts();
+      setList(products);
+    }
+    getProducts();
+  }, []);
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    let timeoutId: NodeJS.Timeout;
+    const debouncedHandleScroll = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(handleScroll, 50);
+    };
+
+    carousel.addEventListener("scroll", debouncedHandleScroll);
+    return () => {
+      carousel.removeEventListener("scroll", debouncedHandleScroll);
+      clearTimeout(timeoutId);
+    };
+  }, [list.length]);
+
+  if (!list.length) return <div>Loading...</div>;
+  console.log("products from page", list);
 
   const handleScroll = () => {
     if (!carouselRef.current) return;
@@ -28,23 +59,6 @@ export default function Carrousel({ list }: CarrouselProps) {
     setActiveIndex(index);
   };
 
-  useEffect(() => {
-    const carousel = carouselRef.current;
-    if (!carousel) return;
-
-    let timeoutId: NodeJS.Timeout;
-    const debouncedHandleScroll = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(handleScroll, 50);
-    };
-
-    carousel.addEventListener("scroll", debouncedHandleScroll);
-    return () => {
-      carousel.removeEventListener("scroll", debouncedHandleScroll);
-      clearTimeout(timeoutId);
-    };
-  }, [list.length]);
-
   return (
     <div className="w-full sm:px-6">
       <div
@@ -58,7 +72,7 @@ export default function Carrousel({ list }: CarrouselProps) {
             className="bg-white p-4 rounded-2xl relative min-w-[180px] h-[180px] snap-center flex-shrink-0"
           >
             <Image
-              src={item.src}
+              src={item.small_picture}
               alt={item.name}
               fill
               className="object-cover rounded-2xl"

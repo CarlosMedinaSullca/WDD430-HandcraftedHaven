@@ -1,6 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
 
 interface Artisan {
+  _id: string;
   first_name: string;
   last_name: string;
   biography: string;
@@ -22,7 +24,10 @@ export default function FeaturedArtisans({ artisans }: artisansProps) {
             key={index}
             className="p-4 rounded-2xl relative min-w-[180px] h-[220px] snap-center flex-shrink-0 flex flex-col items-center"
           >
-            <div className="relative w-[120px] h-[120px]">
+            <Link
+              className="relative w-[120px] h-[120px]"
+              href={`/profile/${artisan._id}`}
+            >
               <Image
                 src="/user.png"
                 alt={`${artisan.first_name} portrait`}
@@ -30,7 +35,7 @@ export default function FeaturedArtisans({ artisans }: artisansProps) {
                 className="object-cover rounded-full border-2 border-[#CADEDF] shadow-md"
                 sizes="120px"
               />
-            </div>
+            </Link>
             <p className="text-black mt-2 font-medium">
               {artisan.first_name} {artisan.last_name}
             </p>

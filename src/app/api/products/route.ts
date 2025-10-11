@@ -7,7 +7,7 @@ export async function GET() {
   try {
     await initDb(); // initialize DB first
     const db = getDb();
-    const products = await db.collection("products").find({}).toArray();
+    const products = await db.collection("product").find({}).toArray();
 
     // convert _id to id string
     const sanitizedProducts = products.map((p) => ({
@@ -19,7 +19,10 @@ export async function GET() {
     return NextResponse.json(sanitizedProducts, { status: 200 });
   } catch (err) {
     console.error("Failed to fetch products:", err);
-    return NextResponse.json({ message: "Error fetching products" }, { status: 500 });
+    return NextResponse.json(
+      { message: "Error fetching products" },
+      { status: 500 }
+    );
   }
 }
 
@@ -29,16 +32,25 @@ export async function POST(request: Request) {
     const productData: Omit<Product, "id" | "_id"> = await request.json();
 
     if (!productData.name || !productData.price || !productData.description) {
-      return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
+      return NextResponse.json(
+        { message: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
     await initDb(); // initialize DB first
     const db = getDb();
     const result = await db.collection("products").insertOne(productData);
 
-    return NextResponse.json({ ...productData, id: result.insertedId.toString() }, { status: 201 });
+    return NextResponse.json(
+      { ...productData, id: result.insertedId.toString() },
+      { status: 201 }
+    );
   } catch (err) {
     console.error("Failed to create product:", err);
-    return NextResponse.json({ message: "Error creating product" }, { status: 500 });
+    return NextResponse.json(
+      { message: "Error creating product" },
+      { status: 500 }
+    );
   }
 }
