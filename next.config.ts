@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
       // Include any other external domains you use (e.g., 'images.unsplash.com')
       "pixabay.com",
       "images.unsplash.com",
+      'images.unsplash.com',
+      'images.remotePatterns',
     ],
   },
 };

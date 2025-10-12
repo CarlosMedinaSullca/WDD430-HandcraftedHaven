@@ -13,7 +13,7 @@ export async function GET() {
     const sanitizedProducts = products.map((p) => ({
       ...p,
       id: p._id.toString(),
-      _id: undefined,
+      _id: p._id.toString(),
     }));
 
     return NextResponse.json(sanitizedProducts, { status: 200 });

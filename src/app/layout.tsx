@@ -26,13 +26,15 @@ export default function RootLayout({
   return (
     <SessionProviderWrapper>
       <html lang="en" suppressHydrationWarning>
-        <NavBar />
+        
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
+          <NavBar />
           {children}
+          <Footer />
         </body>
-        <Footer />
+        
       </html>
     </SessionProviderWrapper>
   );
