@@ -7,13 +7,13 @@ export async function GET() {
   try {
     await initDb(); // initialize DB first
     const db = getDb();
-    const products = await db.collection("products").find({}).toArray();
+    const products = await db.collection("product").find({}).toArray();
 
     // convert _id to id string
     const sanitizedProducts = products.map((p) => ({
       ...p,
       id: p._id.toString(),
-      _id: undefined,
+      _id: p._id.toString(),
     }));
 
     return NextResponse.json(sanitizedProducts, { status: 200 });

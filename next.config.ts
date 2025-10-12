@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
       'cdn.pixabay.com', // 🛑 Add the hostname here
       // Include any other external domains you use (e.g., 'images.unsplash.com')
       'pixabay.com',
+      'images.unsplash.com',
+      'images.remotePatterns',
     ],
   },
 };
