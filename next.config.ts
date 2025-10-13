@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
       "images.unsplash.com",
       'images.unsplash.com',
       'images.remotePatterns',
+      'images.unsplash.com',
+      'images.remotePatterns',
     ],
   },
 };
