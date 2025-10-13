@@ -1,15 +1,18 @@
+// src/app/api/products/route.ts
 import { NextResponse } from "next/server";
 import { initDb, getDb } from "@/lib/db";
-import { Product } from "@/models/Product";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]/route"; // Adjust path to your auth route
+import { Product } from "@/models/Product"; 
+import { ObjectId } from "mongodb"; 
 
-// GET: fetch all products
+
 export async function GET() {
   try {
-    await initDb(); // initialize DB first
+    await initDb();
     const db = getDb();
-    const products = await db.collection("product").find({}).toArray();
+    const products = await db.collection("product").find({}).toArray(); // Note: "product" collection
 
-    // convert _id to id string
     const sanitizedProducts = products.map((p) => ({
       ...p,
       id: p._id.toString(),
@@ -26,11 +29,20 @@ export async function GET() {
   }
 }
 
-// POST: create a product
+// POST: create a product (enhanced to set artisan_id from session)
 export async function POST(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session || session.user?.role !== "seller") {
+      return NextResponse.json(
+        { message: "Unauthorized: Only sellers can create products" },
+        { status: 401 }
+      );
+    }
+
     const productData: Omit<Product, "id" | "_id"> = await request.json();
 
+    // Validation
     if (!productData.name || !productData.price || !productData.description) {
       return NextResponse.json(
         { message: "Missing required fields" },
@@ -38,12 +50,17 @@ export async function POST(request: Request) {
       );
     }
 
-    await initDb(); // initialize DB first
+    const updatedProductData = {
+      ...productData,
+      artisan_id: new ObjectId(session.user.id), 
+    };
+
+    await initDb();
     const db = getDb();
-    const result = await db.collection("products").insertOne(productData);
+    const result = await db.collection("product").insertOne(updatedProductData); 
 
     return NextResponse.json(
-      { ...productData, id: result.insertedId.toString() },
+      { ...updatedProductData, id: result.insertedId.toString() },
       { status: 201 }
     );
   } catch (err) {
