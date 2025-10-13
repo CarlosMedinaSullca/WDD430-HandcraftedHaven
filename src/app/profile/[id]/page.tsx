@@ -96,19 +96,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-8 bg-gray-50">
         <Stories artisan={artisan}/>
         <ListOfProducts artisan={artisan}/>
-        {/* <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="font-bold mb-2">Profile Data:</h3>
-          <p><strong>Profile ID:</strong> {profile._id}</p>
-          <p><strong>Artisan ID:</strong> {profile.artisan_id}</p>
-          <p><strong>Background Image:</strong> {profile.background_pic ? 'Yes' : 'No'}</p>
-          <p><strong>Profile Picture:</strong> {profile.profile_picture ? 'Yes' : 'No'}</p>
-          {artisan && (
-            <>
-              <p><strong>Artisan Name:</strong> {artisan.first_name} {artisan.last_name}</p>
-              <p><strong>Biography:</strong> {artisan.biography}</p>
-            </>
-          )}
-        </div> */}
       </div>
     </>
   );
