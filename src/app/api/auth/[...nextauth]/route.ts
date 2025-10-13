@@ -1,7 +1,10 @@
-import NextAuth from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
+// app/api/auth/[...nextauth]/route.ts
+import NextAuth, { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { ObjectId } from "mongodb"; // If needed for ID handling; optional
 
-const handler = NextAuth({
+// Export authOptions explicitly (this fixes the import error)
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -12,33 +15,52 @@ const handler = NextAuth({
       async authorize(credentials) {
         // Seller account
         if (credentials?.username === "seller" && credentials.password === "1234") {
-          return { id: "1", name: "Seller User", role: "seller" }
+          return { 
+            id: "1", 
+            name: "Seller User", 
+            email: "seller@example.com", // Optional: Add email for completeness
+            role: "seller" 
+          };
         }
 
         // Customer account
         if (credentials?.username === "customer" && credentials.password === "1234") {
-          return { id: "2", name: "Customer User", role: "customer" }
+          return { 
+            id: "2", 
+            name: "Customer User", 
+            email: "customer@example.com", // Optional
+            role: "customer" 
+          };
         }
 
-        return null
+        return null;
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = (user as any).id
-        token.role = (user as any).role
+        token.id = (user as any).id;
+        token.role = (user as any).role;
       }
-      return token
+      return token;
     },
     async session({ session, token }) {
-      session.user.id = token.id as string
-      session.user.role = token.role as string
-      return session
+      if (token) {
+        session.user.id = token.id as string;
+        session.user.role = token.role as string;
+      }
+      return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET
-})
+  secret: process.env.NEXTAUTH_SECRET,
+  pages: {
+    signIn: "/auth/signin", // Optional: Point to your sign-in page if customized
+  },
+};
 
-export { handler as GET, handler as POST }
+// Create handler using authOptions (unchanged functionality)
+const handler = NextAuth(authOptions);
+
+// Export the handler methods (required for the API route)
+export { handler as GET, handler as POST };
