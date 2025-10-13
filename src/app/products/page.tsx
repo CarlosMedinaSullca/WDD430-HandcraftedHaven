@@ -7,7 +7,6 @@ import { ProductInterface } from "../types/interfacesModels";
 import { serializeProduct } from "../utils/serializers";
 import { ProductService } from "../services/productsService";
 
-
 export default async function ProductsPage({
   searchParams,
 }: {
