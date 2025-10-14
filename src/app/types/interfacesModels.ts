@@ -79,3 +79,42 @@ export interface CreateRatingData {
   user_id: string;
   rating: number;
 }
+
+
+export interface Story {
+  _id: string;
+  text: string;
+  date: string | { $date: string };
+  picture1?: string;
+  picture2?: string;
+  video?: string;
+  artisan_id: string;
+}
+
+export interface Profile {
+  _id: string;
+  created_at: string;
+  background_pic: string;
+  profile_picture: string;
+  artisan_id: string;
+}
+
+export interface Artisan {
+  _id: string;
+  first_name: string;
+  last_name: string;
+  biography: string;
+  email: string;
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  price: number;
+  stock: string;
+  description: string;
+  big_picture: string;
+  small_picture: string;
+  category: string;
+  artisan_id: string;
+}

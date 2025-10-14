@@ -3,22 +3,8 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { Profile, Artisan} from "@/app/types/interfacesModels";
 
-interface Profile {
-  _id: string;
-  created_at: string;
-  background_pic: string;
-  profile_picture: string;
-  artisan_id: string;
-}
-
-interface Artisan {
-  _id: string;
-  first_name: string;
-  last_name: string;
-  biography: string;
-  email: string;
-}
 
 interface ProfileElementsProps {
   profile: Profile;
