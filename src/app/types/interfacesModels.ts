@@ -138,3 +138,4 @@ export interface Product {
   category: string;
   artisan_id: string;
 }
+
