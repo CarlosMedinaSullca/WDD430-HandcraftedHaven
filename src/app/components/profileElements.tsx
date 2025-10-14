@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/app/components/authStore"; 
+import { useSession } from "next-auth/react";
 import { Profile, Artisan} from "@/app/types/interfacesModels";
 
 
