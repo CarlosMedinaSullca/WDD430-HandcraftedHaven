@@ -1,26 +1,9 @@
 
 import Image from "next/image";
 import { getProducts } from "@/lib/product-actions";
+import { Product, Artisan} from "@/app/types/interfacesModels";
 
-interface Product {
-    _id: string;
-    name: string;
-    price: number;
-    stock: string;
-    description: string;
-    big_picture: string;
-    small_picture: string;
-    category: string;
-    artisan_id: string;
-}
 
-interface Artisan {
-  _id: string;
-  first_name: string;
-  last_name: string;
-  biography: string;
-  email: string;
-}
 
 interface listOfProductsProps {
   artisan?: Artisan | null;

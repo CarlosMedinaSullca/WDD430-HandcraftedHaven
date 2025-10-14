@@ -1,28 +1,18 @@
 
 import Image from "next/image";
 import {getStories} from "@/lib/story-actions";
+import { Artisan} from "@/app/types/interfacesModels";
 
-interface Story {
-    _id: string;
-    text: string;
-    date: string;
-    picture1: string;
-    picture2: string;
-    video: string;
-    artisan_id: string;
-}
-
-interface Artisan {
-  _id: string;
-  first_name: string;
-  last_name: string;
-  biography: string;
-  email: string;
-}
-
+// import { Story} from "@/app/types/interfacesModels";
 interface storiesProps {
   artisan?: Artisan | null;
 }
+
+// interface StoriesProps {
+//   artisan?: { _id: string } | null; // Only need _id for filtering
+//   stories: Story[];
+//   isArtisanOwner?: boolean;
+// }
 
 function formatDate(date: string | { $date: string }): string {
   const dateString = typeof date === 'string' ? date : date?.$date;

@@ -2,23 +2,9 @@
 import Stories from "@/app/components/stories"
 import ListOfProducts from "@/app/components/listOfProductsProfile";
 import ProfileElements from "@/app/components/profileElements";
+// import StoriesWithActions from "@/app/components/StoriesWithActions";
+import { Story, Profile, Artisan} from "@/app/types/interfacesModels";
 
-
-interface Profile {
-  _id: string;
-  created_at: string;
-  background_pic: string;
-  profile_picture: string;
-  artisan_id: string;
-}
-
-interface Artisan {
-  _id: string;
-  first_name: string;
-  last_name: string;
-  biography: string;
-  email: string;
-}
 
 async function getProfile(id: string): Promise<Profile | null> {
   try {
@@ -68,13 +54,36 @@ async function getArtisan(id: string): Promise<Artisan | null> {
   }
 }
 
+// async function getStories(artisanId?: string): Promise<Story[]> {
+//   try {
+//     const baseUrl = process.env.NODE_ENV === 'production' 
+//       ? 'https://wdd-430-handcrafted-haven-kappa.vercel.app'
+//       : 'http://localhost:3000';
+    
+//     const url = artisanId 
+//       ? `${baseUrl}/api/stories?artisan_id=${artisanId}`
+//       : `${baseUrl}/api/stories`;
+    
+//     const res = await fetch(url, { cache: 'no-store' });
+
+//     if (!res.ok) return [];
+//     return await res.json();
+//   } catch (error) {
+//     console.error('Error fetching stories:', error);
+//     return [];
+//   }
+// }
+
+
 
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const id = params.id;
+  console.log('🟡 Profile page loading with ID:', id);
 
   const profile = await getProfile(id);
+  console.log('🟡 Profile fetched:', profile?._id);
   
 
   if (!profile) {
@@ -89,12 +98,14 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
 
     // Fetch artisan data using the artisan_id from the profile
   const artisan = await getArtisan(profile.artisan_id);
+  // const stories = await getStories(artisan?._id);
 
   return (
     <>
       <ProfileElements profile= {profile} artisan={artisan}/>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-8 bg-gray-50">
-        <Stories artisan={artisan}/>
+        <Stories artisan={artisan}/>      
+        {/* <StoriesWithActions artisan={artisan} initialStories={stories}/> */}
         <ListOfProducts artisan={artisan}/>
       </div>
     </>
