@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from "react";
 import { ReviewInterface, CreateReviewData, CombinedReviewInterface, RatingInterface } from "../types/interfacesModels";
-
+//import { fetchUserProfiles,order66 } from "../endpoints/userProfles";
 interface ReviewsProps {
   product_id: number|string|undefined;
 }
@@ -21,7 +21,8 @@ export default function Reviews({ product_id }: ReviewsProps) {
   }, [product_id]);
 
   const fetchReviews = async () => {
-  console.log("product_id in fetchReviews:", product_id);
+  //await fetchUserProfiles();
+  //await order66();
   if (!product_id) return;
   
   setLoading(true);
@@ -54,7 +55,7 @@ export default function Reviews({ product_id }: ReviewsProps) {
           
           return {
             ...review,
-            rating: userRating?.rating || 5 // Valor por defecto si no encuentra rating
+            rating: userRating?.rating || 5 
           };
         });
       

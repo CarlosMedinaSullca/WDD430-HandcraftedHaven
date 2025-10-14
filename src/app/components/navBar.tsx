@@ -4,11 +4,19 @@ import { Search, ShoppingCart, User } from "lucide-react";
 import { SearchBar } from "../ui/searchBar";
 import { MobileMenu } from "../ui/menu";
 import { Logo } from "../ui/logo";
-import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
+import { useAuthStore, useIsArtisan, useUserRole } from "@/app/components/authStore";
 
 export function NavBar() {
-  const { data: session } = useSession();
+  const { user, isAuthenticated, logout } = useAuthStore();
+  const isArtisan = useIsArtisan();
+  const userRole = useUserRole();
+
+  const handleLogout = () => {
+    logout();
+    // Opcional: redirigir al home después de logout
+    window.location.href = "/auth/signin";
+  };
 
   return (
     <nav className="bg-white w-full shadow-md border-b border-gray-200">
@@ -32,21 +40,26 @@ export function NavBar() {
             </button>
 
             {/* Auth buttons */}
-            {!session ? (
-              <button
-                onClick={() => signIn()}
+            {!isAuthenticated ? (
+              <Link
+                href="/auth/signin"
                 className="flex items-center space-x-1 px-3 py-2 rounded-2xl text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors duration-200"
               >
                 <span>Login/Signup</span>
-              </button>
+              </Link>
             ) : (
               <>
                 <span className="text-gray-700 text-sm">
-                  Hi, {session.user?.name || "User"}
+                  Hi, {user?.first_name || "User"}
+                  {isArtisan && (
+                    <span className="ml-1 text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                      🎨 Artisan
+                    </span>
+                  )}
                 </span>
 
-                {/* Seller-only Profile Button */}
-                {session.user?.role === "seller" && (
+                {/* Artisan-only Profile Button */}
+                {isArtisan && (
                   <Link
                     href="/profile"
                     className="flex items-center space-x-1 px-3 py-2 rounded-2xl text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors duration-200"
@@ -57,7 +70,7 @@ export function NavBar() {
                 )}
 
                 <button
-                  onClick={() => signOut({ callbackUrl: "/" })}
+                  onClick={handleLogout}
                   className="flex items-center space-x-1 px-3 py-2 rounded-2xl text-sm font-medium bg-[#16796F] text-white hover:bg-blue-700 transition-colors duration-200"
                 >
                   <span>Logout</span>

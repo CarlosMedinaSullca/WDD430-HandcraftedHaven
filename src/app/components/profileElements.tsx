@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useAuthStore } from "@/app/components/authStore"; 
 
 interface Profile {
   _id: string;
@@ -25,24 +25,26 @@ interface ProfileElementsProps {
   artisan?: Artisan | null;
 }
 
-export default function profileElements({ profile, artisan } : ProfileElementsProps) {
-    const { data: session, status } = useSession();
+export default function profileElements({ profile} : ProfileElementsProps) {
+        const { user, artisan, isAuthenticated, isLoading } = useAuthStore(); // ← Usa tu authStore
+
     const router = useRouter();
 
 
-    if (status === "loading") return <p>Loading...</p>;
+    
+    if (isLoading) return <p>Loading...</p>;
+    if (!isAuthenticated || !user) return <p>Please log in</p>;
 
-    // MyProducts button
-      function MyProducts({ userId }: { userId: string }) {
+    function MyProducts({ userId }: { userId: string }) {
         return (
-          <button
-            onClick={() => router.push(`/products?owner=${userId}`)}
-            className="absolute bottom-5 right-10 bg-green-500 px-5 py-2 rounded-lg text-white font-medium shadow hover:bg-green-600 hover:scale-105 transition"
-          >
-            My Products
-          </button>
+            <button
+                onClick={() => router.push(`/products?owner=${userId}`)}
+                className="absolute bottom-5 right-10 bg-green-500 px-5 py-2 rounded-lg text-white font-medium shadow hover:bg-green-600 hover:scale-105 transition"
+            >
+                My Products
+            </button>
         );
-      }
+    }
 
     return (
          <div 
@@ -62,12 +64,11 @@ export default function profileElements({ profile, artisan } : ProfileElementsPr
           <h1 className="text-xl mt-3">
             {`${artisan?.first_name} ${artisan?.last_name}`} <span className="font-semibold"></span>
           </h1>
-          <p className="opacity-90">Role: {session?.user?.role}</p>
+          <p className="opacity-90">Role: {artisan ? 'Artesano 🎨' : 'Cliente 👤'}</p>
         </div>
-        <MyProducts userId={session?.user?.id || ""} />
+        {artisan && (
+                <MyProducts userId={user.user_id.toString()} />
+            )}
       </div>
     );
 }
-
-
-      

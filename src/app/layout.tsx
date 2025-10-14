@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { SessionProviderWrapper } from "../providers/SessionProviderWrapper"; // 👈 client wrapper
 import { NavBar } from "./components/navBar";
 import Footer from "./components/Footer";
 
@@ -24,18 +23,20 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <SessionProviderWrapper>
-      <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+       suppressHydrationWarning>
+        {/* ✅ NavBar DENTRO del body */}
+        <NavBar />
         
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <NavBar />
+        {/* ✅ Contenido principal */}
+        <main className="min-h-screen">
           {children}
-          <Footer />
-        </body>
+        </main>
         
-      </html>
-    </SessionProviderWrapper>
+        {/* ✅ Footer DENTRO del body */}
+        <Footer />
+      </body>
+    </html>
   );
 }

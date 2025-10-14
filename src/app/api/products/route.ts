@@ -1,9 +1,6 @@
 // src/app/api/products/route.ts
 import { NextResponse } from "next/server";
 import { initDb, getDb } from "@/lib/db";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]/route"; // Adjust path to your auth route
-import { Product } from "@/models/Product"; 
 import { ObjectId } from "mongodb"; 
 
 
@@ -29,38 +26,53 @@ export async function GET() {
   }
 }
 
-// POST: create a product (enhanced to set artisan_id from session)
 export async function POST(request: Request) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session || session.user?.role !== "seller") {
+    const userId = request.headers.get('x-user-id');
+    const artisanId = request.headers.get('x-artisan-id');
+    
+    if (!userId) {
       return NextResponse.json(
-        { message: "Unauthorized: Only sellers can create products" },
+        { message: "Unauthorized: User ID required" },
         { status: 401 }
       );
     }
 
-    const productData: Omit<Product, "id" | "_id"> = await request.json();
+    if (!artisanId) {
+      return NextResponse.json(
+        { message: "Unauthorized: Only artisans can create products" },
+        { status: 401 }
+      );
+    }
 
-    // Validation
+    const productData = await request.json();
+
+  
     if (!productData.name || !productData.price || !productData.description) {
       return NextResponse.json(
-        { message: "Missing required fields" },
+        { message: "Missing required fields: name, price, description" },
         { status: 400 }
       );
     }
 
     const updatedProductData = {
       ...productData,
-      artisan_id: new ObjectId(session.user.id), 
+      artisan_id: new ObjectId(artisanId),
+      user_id: parseInt(userId), 
+      created_at: new Date(),
+      updated_at: new Date()
     };
 
     await initDb();
     const db = getDb();
-    const result = await db.collection("product").insertOne(updatedProductData); 
+    const result = await db.collection("product").insertOne(updatedProductData);
 
     return NextResponse.json(
-      { ...updatedProductData, id: result.insertedId.toString() },
+      { 
+        ...updatedProductData, 
+        id: result.insertedId.toString(),
+        _id: result.insertedId.toString()
+      },
       { status: 201 }
     );
   } catch (err) {

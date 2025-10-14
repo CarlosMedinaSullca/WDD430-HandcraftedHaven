@@ -1,8 +1,12 @@
-
-export interface UserInterface{
-    user_id?: number;
-    first_name: string;
-    last_name: string;
+export interface UserInterface {
+  _id?: string;
+  user_id: number;
+  first_name: string;
+  last_name: string;
+  email?: string;
+  password?: string;
+  created_at?: Date;
+  updated_at?: Date;
 }
 export interface RatingInterface{
     _id?: string;
@@ -24,11 +28,13 @@ export interface ProductInterface {
   artisan_id?: string;      
   Artisan_Artisan_id?: number;
 }
-export interface ArtisanInterface{
-    Artisan_id?: number;
-    first_name: string;
-    last_name: string;
-    biography: string;
+export interface ArtisanInterface {
+  _id?: string;
+  Artisan_id: number;
+  first_name: string;
+  last_name: string;
+  biography: string;
+  user_id?: number;
 }
 export interface StoryInterface{
     story_id?: number;
@@ -39,12 +45,14 @@ export interface StoryInterface{
     video: string;
     Artisan_Artisan_id?: number;
 }
-export interface ProfileInterface{
-    profile_id?: number;
-    created_at?: Date|string;
-    background_pic?: string;
-    profile_pic?: string;
-    Artisan_Artisan_id?: number;
+export interface ProfileInterface {
+  _id?: string;
+  profile_id: number;
+  created_at: Date;
+  background_pic?: string;
+  profile_picture?: string;
+  user_id: number; 
+  Artisan_Artisan_id?: number;
 }
 export interface ReviewInterface{
     _id?: string;
@@ -78,4 +86,16 @@ export interface CreateRatingData {
   product_id: string;
   user_id: string;
   rating: number;
+}
+interface AuthState {
+  user: UserInterface | null;
+  profile: ProfileInterface | null;
+  artisan: ArtisanInterface | null;
+  isAuthenticated: boolean;
+  isLoading: boolean; 
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  register: (userData: { first_name: string; last_name: string; email: string; password: string }) => Promise<{ success: boolean; error?: string }>;
+  logout: () => void;
+  updateProfile: (profileData: Partial<ProfileInterface>) => void;
+  updateUser: (userData: Partial<UserInterface>) => void;
 }

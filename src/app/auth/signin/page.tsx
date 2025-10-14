@@ -1,38 +1,35 @@
 "use client";
 
 import { useState } from "react";
-import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/app/components/authStore";
 
 export default function SignInPage() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  
+  // Usamos tu authStore en lugar de NextAuth
+  const login = useAuthStore((state) => state.login);
+  const isLoading = useAuthStore((state) => state.isLoading);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
 
-    const result = await signIn("credentials", {
-      redirect: false, // 👈 we control the redirect
-      username,
-      password,
-    });
-
-    if (result?.error) {
-      setError("Invalid credentials. Try seller:1234 or customer:1234");
+    // ✅ Usamos tu authStore en lugar de signIn
+    const result = await login(email, password);;
+    if (!result.success) {
+      setError(result.error || "Invalid credentials");
     } else {
-      // ✅ Get session info to check role
-      const res = await fetch("/api/auth/session");
-      const session = await res.json();
-
-      if (session?.user?.role === "seller") {
-        router.push("/profile");
-      } else if (session?.user?.role === "customer") {
-        router.push("/"); // send customers back to homepage
+      // ✅ Obtenemos el estado actual del store para ver el rol
+      const { artisan, profile } = useAuthStore.getState();
+      console.log("Login successful:", result);
+      if (artisan) {
+        router.push(`/profile/${profile!._id}`); 
       } else {
-        router.push("/"); // fallback
+        router.push("/products"); 
       }
     }
   }
@@ -50,13 +47,13 @@ export default function SignInPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Username</label>
+            <label className="block text-sm font-medium mb-1">Email</label>
             <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              placeholder="Enter your username"
+              placeholder="Enter your email"
               required
             />
           </div>
@@ -75,9 +72,10 @@ export default function SignInPage() {
 
           <button
             type="submit"
-            className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg shadow hover:bg-purple-700 transition"
+            disabled={isLoading}
+            className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg shadow hover:bg-purple-700 transition disabled:opacity-50"
           >
-            Sign In
+            {isLoading ? "Signing In..." : "Sign In"}
           </button>
         </form>
       </div>
