@@ -17,7 +17,7 @@ export default function Carrousel() {
   useEffect(() => {
     async function getProducts() {
       const products = await fetchProducts();
-      setList(products);
+      setList(products.slice(0, 3));
     }
     getProducts();
   }, []);

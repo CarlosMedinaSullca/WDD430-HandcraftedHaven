@@ -7,7 +7,6 @@ import { Gem, Leaf, LampDesk, Shirt, LucideIcon } from "lucide-react";
 import React from "react";
 import { fetchCategories } from "./endpoints/categories";
 import { fetchArtisans } from "./endpoints/artisans";
-import { fetchProducts } from "./endpoints/products";
 
 interface Category {
   name: string;
