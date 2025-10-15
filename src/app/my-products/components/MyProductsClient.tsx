@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ProductInterface } from "@/app/types/interfacesModels";
 import { ProductGrid } from "@/app/components/productGrid";
 import ProductForm from "@/app/components/ProductForm";
+import { useNavigationWithLoading } from "@/app/components/useNavigationWithLoading";
 
 interface MyProductsClientProps {
   session: any;
@@ -56,13 +57,13 @@ export default function MyProductsClient({ session }: MyProductsClientProps) {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<ProductInterface | null>(null);
   const [deleteLoading, setDeleteLoading] = useState<string | null>(null);
-
+  const { navigateWithLoading, NavigationSpinner } = useNavigationWithLoading();
   // 👈 Added limit (was missing in useEffect call)
   const limit = 6;
 
   useEffect(() => {
     if (!userId) {
-      router.push("/");
+      navigateWithLoading("/");
       return;
     }
     refetchProducts();
@@ -252,6 +253,7 @@ export default function MyProductsClient({ session }: MyProductsClientProps) {
         mode="edit"
         userId={userId || ""}
       />
+       <NavigationSpinner />
     </main>
   );
 }

@@ -4,6 +4,7 @@ import React from "react";
 import { ProductInterface } from "../types/interfacesModels";
 import { useRouter } from "next/navigation";
 import Link from "next/link"; // For detail page navigation
+import { useNavigationWithLoading } from "./useNavigationWithLoading";
 
 interface ProductGridProps {
   products: ProductInterface[];
@@ -19,7 +20,6 @@ interface SkeletonProps {
 
 const ProductGridSkeleton: React.FC<SkeletonProps> = ({ showActions = false }) => {
   const skeletonItems = Array.from({ length: 6 });
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
       {skeletonItems.map((_, index) => (
@@ -51,10 +51,11 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   onDelete,
 }) => {
   const router = useRouter();
+  const { navigateWithLoading, NavigationSpinner } = useNavigationWithLoading();
 
   const handleProductClick = (id?: string) => {
     if (!id || showActions) return;
-    router.push(`/products/${id}`);
+    navigateWithLoading(`/products/${id}`);
   };
 
   if (loading || !products?.length) {
@@ -150,6 +151,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
           )}
         </div>
       ))}
+      <NavigationSpinner/>
     </div>
   );
 };

@@ -10,6 +10,7 @@ import {
   useIsArtisan,
   useUserRole,
 } from "@/app/components/authStore";
+import LinkWithLoading from "./LinkWithLoading";
 
 export function NavBar() {
   const { user, isAuthenticated, logout } = useAuthStore();
@@ -32,9 +33,9 @@ export function NavBar() {
       <div className="sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-center h-16 gap-2 md:gap-8">
           {/* ✅ Logo with Home Link */}
-          <Link href="/" className="flex items-center">
+          <LinkWithLoading href="/" className="flex items-center">
             <Logo />
-          </Link>
+          </LinkWithLoading>
 
           {/* 🔍 Search Bar */}
           <div className="w-full md:w-auto">
@@ -50,12 +51,12 @@ export function NavBar() {
 
             {/* 👤 Auth buttons */}
             {!isAuthenticated ? (
-              <Link
+              <LinkWithLoading
                 href="/auth/signin"
                 className="flex items-center space-x-1 px-3 py-2 rounded-2xl text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors duration-200"
               >
                 <span>Login / Signup</span>
-              </Link>
+              </LinkWithLoading>
             ) : (
               <>
                 <span className="text-gray-700 text-sm">
@@ -69,13 +70,13 @@ export function NavBar() {
 
                 {/* 👨‍🎨 Artisan-only Profile Button */}
                 {isArtisan && (
-                  <Link
+                  <LinkWithLoading
                     href={`/profile/${artisan?._id}`}
                     className="flex items-center space-x-1 px-3 py-2 rounded-2xl text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors duration-200"
                   >
                     <User className="h-5 w-5" />
                     <span>Profile</span>
-                  </Link>
+                  </LinkWithLoading>
                 )}
 
                 <button

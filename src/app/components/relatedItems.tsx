@@ -2,6 +2,7 @@
 import React from "react";
 import { ProductInterface } from "../types/interfacesModels";
 import { useRouter } from 'next/navigation';
+import { useNavigationWithLoading } from "./useNavigationWithLoading";
 
 interface SingleItemProps {
   product: ProductInterface;
@@ -14,9 +15,9 @@ interface RelatedItemsProps {
 
 const SingleItem = ({ product }: SingleItemProps) => {
   const router = useRouter();
-  
+  const { navigateWithLoading, NavigationSpinner } = useNavigationWithLoading();
   const handleClick = () => {
-    router.push(`/products/${product._id}`);
+    navigateWithLoading(`/products/${product._id}`);
   };
 
   return (
@@ -36,6 +37,7 @@ const SingleItem = ({ product }: SingleItemProps) => {
           </div>
         </div>
       </div>
+       <NavigationSpinner />
     </button>
   );
 };

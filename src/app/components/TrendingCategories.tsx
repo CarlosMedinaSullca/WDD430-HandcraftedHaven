@@ -1,5 +1,6 @@
 import { type LucideIcon } from "lucide-react";
 import Link from "next/link";
+import LinkWithLoading from "./LinkWithLoading";
 
 interface TrendingCategoriesProp {
   categories: { name: string; icon: LucideIcon }[];
@@ -18,7 +19,7 @@ export default function TrendingCategories({
         {categories.map((category, index) => {
           const Icon = category.icon;
           return (
-            <Link
+            <LinkWithLoading
               href={`/products?category=${encodeURIComponent(category.name)}`}
               key={index}
               className="p-5 rounded-2xl min-w-[160px] h-[200px] snap-center flex-shrink-0 flex flex-col items-center justify-between border border-gray-300 bg-white shadow-sm hover:shadow-md hover:scale-[1.02] transition-all duration-200 cursor-pointer"
@@ -27,7 +28,7 @@ export default function TrendingCategories({
                 <Icon size={44} strokeWidth={1.5} className="text-teal-600" />
               </div>
               <p className="text-gray-800 mt-3 font-medium">{category.name}</p>
-            </Link>
+            </LinkWithLoading>
           );
         })}
       </div>

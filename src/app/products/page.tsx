@@ -6,6 +6,7 @@ import { ProductGrid } from "../components/productGrid";
 import { ProductInterface } from "../types/interfacesModels";
 import { serializeProduct } from "../utils/serializers";
 import { ProductService } from "../services/productsService";
+import LinkWithLoading from "../components/LinkWithLoading";
 
 export default async function ProductsPage({
   searchParams,
@@ -99,13 +100,13 @@ export default async function ProductsPage({
             Apply
           </button>
 
-          <Link
+          <LinkWithLoading
             href="/products"
             className="border border-[#9CA89E] text-[#16796F] bg-white 
                        px-4 py-2 rounded hover:bg-[#CADEDF] transition"
           >
             Reset
-          </Link>
+          </LinkWithLoading>
         </form>
 
         {/* ✅ Product Grid Component */}
@@ -114,14 +115,14 @@ export default async function ProductsPage({
         {/* Pagination */}
         <div className="flex justify-center items-center mt-6 gap-4">
           {page > 1 && (
-            <Link
+            <LinkWithLoading
               href={`/products?page=${page - 1}&limit=${limit}&category=${
                 params?.category || ""
               }&sort=${params?.sort || ""}`}
               className="px-4 py-2 border rounded bg-white text-[#16796F] hover:bg-[#CADEDF] transition"
             >
               Previous
-            </Link>
+            </LinkWithLoading>
           )}
 
           <span className="px-3 py-1 text-gray-700">
@@ -129,14 +130,14 @@ export default async function ProductsPage({
           </span>
 
           {page < totalPages && (
-            <Link
+            <LinkWithLoading
               href={`/products?page=${page + 1}&limit=${limit}&category=${
                 params?.category || ""
               }&sort=${params?.sort || ""}`}
               className="px-4 py-2 border rounded bg-white text-[#16796F] hover:bg-[#CADEDF] transition"
             >
               Next
-            </Link>
+            </LinkWithLoading>
           )}
         </div>
       </main>

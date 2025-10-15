@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Profile, Artisan } from "@/app/types/interfacesModels";
 import { useAuthStore } from "./authStore";
+import { useNavigationWithLoading } from "./useNavigationWithLoading";
 
 interface ProfileElementsProps {
   profile: Profile;
@@ -13,7 +14,7 @@ interface ProfileElementsProps {
 
 export default function profileElements({ profile }: ProfileElementsProps) {
   const { user, artisan, isAuthenticated, isLoading } = useAuthStore(); // ← Usa tu authStore
-
+  const { navigateWithLoading, NavigationSpinner } = useNavigationWithLoading();
   const router = useRouter();
 
   if (isLoading) return <p>Loading...</p>;
@@ -22,7 +23,7 @@ export default function profileElements({ profile }: ProfileElementsProps) {
   function MyProducts({ userId }: { userId: string }) {
     return (
       <button
-        onClick={() => router.push(`/products?owner=${userId}`)}
+        onClick={() => navigateWithLoading(`/products?owner=${userId}`)}
         className="absolute bottom-5 right-10 bg-green-500 px-5 py-2 rounded-lg text-white font-medium shadow hover:bg-green-600 hover:scale-105 transition"
       >
         My Products
@@ -57,6 +58,7 @@ export default function profileElements({ profile }: ProfileElementsProps) {
         </p>
       </div>
       {artisan && <MyProducts userId={user.user_id.toString()} />}
+       <NavigationSpinner />
     </div>
   );
 }

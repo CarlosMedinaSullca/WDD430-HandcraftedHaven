@@ -3,13 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/app/components/authStore";
+import { useNavigationWithLoading } from "@/app/components/useNavigationWithLoading";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
-  
+  const { navigateWithLoading, NavigationSpinner } = useNavigationWithLoading();
   // Usamos tu authStore en lugar de NextAuth
   const login = useAuthStore((state) => state.login);
   const isLoading = useAuthStore((state) => state.isLoading);
@@ -27,9 +28,9 @@ export default function SignInPage() {
       const { artisan, profile } = useAuthStore.getState();
       console.log("Login successful:", result);
       if (artisan) {
-        router.push(`/profile/${profile!._id}`); 
+        navigateWithLoading(`/profile/${profile!._id}`); 
       } else {
-        router.push("/products"); 
+        navigateWithLoading("/products"); 
       }
     }
   }
@@ -79,6 +80,7 @@ export default function SignInPage() {
           </button>
         </form>
       </div>
+       <NavigationSpinner />
     </div>
   );
 }
