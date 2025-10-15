@@ -5,16 +5,25 @@ import { SearchBar } from "../ui/searchBar";
 import { MobileMenu } from "../ui/menu";
 import { Logo } from "../ui/logo";
 import Link from "next/link";
-import { useAuthStore, useIsArtisan, useUserRole } from "@/app/components/authStore";
+import {
+  useAuthStore,
+  useIsArtisan,
+  useUserRole,
+} from "@/app/components/authStore";
 
 export function NavBar() {
   const { user, isAuthenticated, logout } = useAuthStore();
+  const { artisan, profile } = useAuthStore.getState();
+
+  console.log("User", user);
+  console.log("profile", profile);
+  console.log("artisan", artisan);
+
   const isArtisan = useIsArtisan();
   const userRole = useUserRole();
 
   const handleLogout = () => {
     logout();
-    // Opcional: redirigir al home después de logout
     window.location.href = "/auth/signin";
   };
 
@@ -27,25 +36,25 @@ export function NavBar() {
             <Logo />
           </Link>
 
-          {/* Search Bar */}
+          {/* 🔍 Search Bar */}
           <div className="w-full md:w-auto">
             <SearchBar />
           </div>
 
-          {/* Desktop Navigation */}
+          {/* 🖥️ Desktop Navigation */}
           <div className="flex items-center space-x-4">
-            {/* Cart */}
+            {/* 🛒 Cart */}
             <button className="flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors duration-200">
               <ShoppingCart className="h-5 w-5" />
             </button>
 
-            {/* Auth buttons */}
+            {/* 👤 Auth buttons */}
             {!isAuthenticated ? (
               <Link
                 href="/auth/signin"
                 className="flex items-center space-x-1 px-3 py-2 rounded-2xl text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors duration-200"
               >
-                <span>Login/Signup</span>
+                <span>Login / Signup</span>
               </Link>
             ) : (
               <>
@@ -58,10 +67,10 @@ export function NavBar() {
                   )}
                 </span>
 
-                {/* Artisan-only Profile Button */}
+                {/* 👨‍🎨 Artisan-only Profile Button */}
                 {isArtisan && (
                   <Link
-                    href="/profile"
+                    href={`/profile/${artisan?._id}`}
                     className="flex items-center space-x-1 px-3 py-2 rounded-2xl text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors duration-200"
                   >
                     <User className="h-5 w-5" />
@@ -79,7 +88,7 @@ export function NavBar() {
             )}
           </div>
 
-          {/* Mobile Menu */}
+          {/* 📱 Mobile Menu */}
           <MobileMenu />
         </div>
       </div>
