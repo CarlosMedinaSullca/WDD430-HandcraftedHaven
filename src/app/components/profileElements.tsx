@@ -2,49 +2,23 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { Profile, Artisan } from "@/app/types/interfacesModels";
 import { useAuthStore } from "./authStore";
 import { useNavigationWithLoading } from "./useNavigationWithLoading";
 
 interface ProfileElementsProps {
   profile: Profile;
+  artisan?: Artisan | null;
 }
 
-export default function ProfileElements({ profile }: ProfileElementsProps) {
-  const { user, isAuthenticated, isLoading } = useAuthStore();
+export default function profileElements({ profile }: ProfileElementsProps) {
+  const { user, artisan, isAuthenticated, isLoading } = useAuthStore(); // ← Usa tu authStore
   const { navigateWithLoading, NavigationSpinner } = useNavigationWithLoading();
-  const [artisan, setArtisan] = useState<Artisan | null>(null);
-
-  const artisanId = profile.artisan_id;
-
-  useEffect(() => {
-    if (!artisanId) return;
-
-    async function fetchArtisan() {
-      try {
-        const baseUrl =
-          process.env.NODE_ENV === "production"
-            ? process.env.NEXTAUTH_URL ||
-              "https://wdd-430-handcrafted-haven-kappa.vercel.app/"
-            : "http://localhost:3000";
-
-        const res = await fetch(`${baseUrl}/api/artisans/${artisanId}`, {
-          cache: "no-store",
-        });
-
-        if (!res.ok) return setArtisan(null);
-        const data = await res.json();
-        setArtisan(data);
-      } catch (error) {
-        setArtisan(null);
-      }
-    }
-
-    fetchArtisan();
-  }, [artisanId]);
+  const router = useRouter();
 
   if (isLoading) return <p>Loading...</p>;
+  if (!isAuthenticated || !user) return <p>Please log in</p>;
 
   function MyProducts({ userId }: { userId: string }) {
     return (
@@ -56,11 +30,6 @@ export default function ProfileElements({ profile }: ProfileElementsProps) {
       </button>
     );
   }
-
-  const showMyProducts =
-    isAuthenticated &&
-    artisan &&
-    user?.user_id.toString() === artisan.user_id.toString();
 
   return (
     <div
@@ -81,16 +50,14 @@ export default function ProfileElements({ profile }: ProfileElementsProps) {
           alt="profile picture"
         />
         <h1 className="text-xl mt-3">
-          {artisan
-            ? `${artisan.first_name} ${artisan.last_name}`
-            : profile.name}
+          {`${artisan?.first_name} ${artisan?.last_name}`}{" "}
+          <span className="font-semibold"></span>
         </h1>
         <p className="opacity-90">
           Role: {artisan ? "Artesano 🎨" : "Cliente 👤"}
         </p>
       </div>
-
-      {showMyProducts && <MyProducts userId={user?.user_id.toString() || ""} />}
+      {artisan && <MyProducts userId={user.user_id.toString()} />}
       <NavigationSpinner />
     </div>
   );
