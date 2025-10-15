@@ -16,7 +16,7 @@ async function getProfile(id: string): Promise<Profile | null> {
 
     const res = await fetch(`${baseUrl}/api/profile/${id}`, {
       // Important: Add cache options
-      cache: "no-store",
+      cache: "reload",
       next: { revalidate: 0 }, // Disable cache to always get fresh data
     });
 
@@ -114,7 +114,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
 
   return (
     <>
-      <ProfileElements profile={profile} artisan={artisan} />
+      <ProfileElements profile={profile} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-8 bg-gray-50">
         <Stories artisan={artisan} stories={stories} />
         <ListOfProducts artisan={artisan} />

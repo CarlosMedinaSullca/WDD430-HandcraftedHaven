@@ -104,6 +104,7 @@ export interface Profile {
   background_pic: string;
   profile_picture: string;
   artisan_id: string;
+  name: string;
 }
 
 export interface Artisan {
@@ -112,6 +113,7 @@ export interface Artisan {
   last_name: string;
   biography: string;
   email: string;
+  user_id: string;
 }
 
 export interface Product {

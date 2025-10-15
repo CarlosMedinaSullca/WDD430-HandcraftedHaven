@@ -141,7 +141,6 @@ export const useAuthStore = create<AuthState>()(
   )
 );
 
-// Hooks derivados útiles
 export const useUserRole = () => {
   const { artisan } = useAuthStore();
   return artisan ? "artisan" : "client";
