@@ -50,6 +50,7 @@ export const useAuthStore = create<AuthState>()(
           });
 
           const data = await response.json();
+          console.log("Data fetched", data);
 
           if (!response.ok) {
             return { success: false, error: data.error };
@@ -137,6 +138,15 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "auth-storage",
+      merge: (persistedState, currenState) => {
+        const merged = {
+          ...currenState,
+          // Always reset isLoading to false when loading from persistence
+          isLoading: false,
+
+        } as AuthState;
+        return merged;
+      },
     }
   )
 );

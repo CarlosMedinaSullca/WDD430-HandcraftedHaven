@@ -2,6 +2,7 @@
 'use client';
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { useIsArtisan } from '@/app/components/authStore';
 import Image from "next/image";
 import {getStories} from "@/lib/story-actions";
 import { Artisan, Story} from "@/app/types/interfacesModels";
@@ -47,6 +48,9 @@ export default function Stories({artisan, stories } : storiesProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   // const isArtisanOwner = session?.user?.id === artisan?._id;
+
+  const isArtisan = useIsArtisan();
+
 
   console.log('📖 Stories component - received props:', {
     artisan,
@@ -116,14 +120,33 @@ export default function Stories({artisan, stories } : storiesProps) {
             </button>
           )} */}
 
-          {/* Always show Add Story button for testing */}
-            <button
+          { isArtisan && (
+                      <button
               onClick={() => setIsModalOpen(true)}
               className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
               disabled={isLoading}
             >
               {isLoading ? 'Creating...' : '+ Add Story'}
-            </button>
+          </button>
+          )}
+    
+          {/* <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Creating...' : '+ Add Story'}
+          </button> */}
+          
+
+          {/* Always show Add Story button for testing */}
+            {/* <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Creating...' : '+ Add Story'}
+            </button> */}
 
         </div>
 
